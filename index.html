@@ -177,22 +177,37 @@ const tts = window.speechSynthesis;
 let voices = [];
 if (tts) { const lv = () => voices = tts.getVoices(); lv(); tts.onvoiceschanged = lv; }
 const voiceFor = l => { for (const p of l === 'ms' ? ['ms', 'id'] : ['en']) { const v = voices.find(v => v.lang.toLowerCase().startsWith(p)); if (v) return v; } };
-function say(ms, en) {
+// Pre-recorded neural voice clips (tools/gen_audio.py); browser TTS only for anything missing.
+let CLIPS = {};
+fetch('/audio/index.json').then(r => r.json()).then(j => CLIPS = j).catch(() => {});
+const player = new Audio();
+let speakId = 0;
+function speakOne(txt, l) {
   return new Promise(res => {
-    if (!S.sound || !tts) return res();
-    tts.cancel();
-    const parts = S.lang === 'ms' ? [[ms, 'ms']] : S.lang === 'en' ? [[en, 'en']] : [[ms, 'ms'], [en, 'en']];
-    let fin = false; const done = () => { if (!fin) { fin = true; res(); } };
-    setTimeout(done, 6000);
-    parts.forEach(([txt, l], i) => {
-      const u = new SpeechSynthesisUtterance(txt);
-      const v = voiceFor(l);
-      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = l === 'ms' ? 'ms-MY' : 'en-US';
-      u.rate = .88; u.pitch = 1.3;
-      if (i === parts.length - 1) u.onend = u.onerror = done;
-      tts.speak(u);
-    });
+    const f = CLIPS[l + '|' + txt];
+    if (f) {
+      player.src = '/audio/' + f;
+      player.onended = player.onerror = res;
+      player.play().catch(res);
+      return;
+    }
+    if (!tts) return res();
+    const u = new SpeechSynthesisUtterance(txt), v = voiceFor(l);
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = l === 'ms' ? 'ms-MY' : 'en-US';
+    u.rate = .88; u.pitch = 1.3;
+    u.onend = u.onerror = res;
+    tts.speak(u);
   });
+}
+function hush() { speakId++; player.pause(); tts && tts.cancel(); }
+// ms / en: a string or an array of segments, each one clip.
+function say(ms, en) {
+  hush();
+  if (!S.sound) return Promise.resolve();
+  const id = speakId, seg = (x, l) => [x].flat().filter(Boolean).map(t => [t, l]);
+  const parts = [...(S.lang !== 'en' ? seg(ms, 'ms') : []), ...(S.lang !== 'ms' ? seg(en, 'en') : [])];
+  const run = (async () => { for (const [t, l] of parts) { if (id !== speakId) return; await speakOne(t, l); } })();
+  return Promise.race([run, wait(8000)]);
 }
 
 /* ---------- sound fx ---------- */
@@ -326,7 +341,7 @@ const GAMES = [
 let cleanup = () => {}, SID = 0;
 function nav(html) {
   cleanup(); cleanup = () => {}; SID++;
-  tts && tts.cancel();
+  hush();
   document.querySelectorAll('.modal').forEach(m => m.remove());
   $('#main').innerHTML = html;
 }
@@ -431,7 +446,7 @@ function quiz(g, l) {
       busy = true; q++;
       b.classList.add('ok'); fx.ok(); burst(e.clientX, e.clientY); jump(); prog();
       const p = rand(PRAISE), a = r.after || ['', ''];
-      await Promise.all([say(`${p[0]} ${a[0]}`, `${p[1]} ${a[1]}`), wait(1300)]);
+      await Promise.all([say([p[0], a[0]], [p[1], a[1]]), wait(1300)]);
       if (sid !== SID) return;
       q >= N ? win(g, l) : round();
     });
