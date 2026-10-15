@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Manja Minda</title>
+<meta name="description" content="Kuiz & permainan comel untuk kanak-kanak 2-4 tahun. Cute quizzes & games for toddlers age 2-4.">
+<meta name="theme-color" content="#ffb84d">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Manja Minda">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#4a2c5e;--ok:#2ed573}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:'Baloo 2',ui-rounded,system-ui,sans-serif;font-weight:600;color:var(--ink);background:linear-gradient(180deg,#bde8ff 0%,#e9f7ff 45%,#ffe8f4 100%);touch-action:manipulation}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:none;padding:0}
+small{font-weight:600;opacity:.65}
+#main{position:relative;z-index:1;height:100dvh;max-width:760px;margin:0 auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.screen{flex:1;display:flex;flex-direction:column;min-height:0;animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:scale(.95) translateY(12px)}}
+
+/* background */
+.bg{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.bg span{position:absolute;font-size:64px;opacity:.9;animation:drift linear infinite}
+.bg .c1{top:8%;animation-duration:38s}.bg .c2{top:30%;font-size:44px;animation-duration:52s;animation-delay:-20s}.bg .c3{top:62%;font-size:80px;animation-duration:64s;animation-delay:-40s;opacity:.6}
+.bg .sun{left:-30px;bottom:-30px;font-size:110px;animation:spin 30s linear infinite}
+.bg .dot{width:18px;height:18px;border-radius:50%;font-size:0;animation:float 9s ease-in-out infinite}
+@keyframes drift{from{transform:translateX(-120px)}to{transform:translateX(110vw)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{50%{transform:translateY(-40px) scale(1.2)}}
+
+/* home */
+.top{display:flex;align-items:center;gap:10px;padding:12px 16px 4px}
+.top h1{margin:0;font-size:2rem;line-height:.95;font-weight:800;color:#ff6b9d;text-shadow:3px 3px 0 #fff,5px 5px 0 #ffd16655;flex:1}
+.top h1 span{color:#3d8bff}
+.mascot{font-size:3.2rem;line-height:1;display:inline-block;animation:bob 2.2s ease-in-out infinite}
+.mascot.yay{animation:yay .7s}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-6deg)}}
+@keyframes yay{30%{transform:translateY(-30px) scale(1.25) rotate(10deg)}60%{transform:translateY(0) scale(.95)}}
+.tools{display:flex;gap:8px}
+.pill{background:#fff;border-radius:99px;padding:6px 14px;font-weight:800;box-shadow:0 4px 0 #0001;min-height:44px}
+.pill:active{transform:translateY(3px);box-shadow:none}
+.install{margin:6px 16px 2px;background:linear-gradient(90deg,#ff6b9d,#ff9f1a);color:#fff;border-radius:99px;padding:10px;font-weight:800;font-size:1.1rem;box-shadow:0 5px 0 #c4507a;animation:pulse 1.8s infinite}
+.install[hidden]{display:none}
+@keyframes pulse{50%{transform:scale(1.03)}}
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px;padding:12px 16px 28px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.gcard{background:var(--bg);border-radius:30px;padding:14px 8px 10px;box-shadow:0 8px 0 #0002,inset 0 -6px 0 #0001;display:flex;flex-direction:column;align-items:center;animation:popin .5s backwards;color:#fff;text-shadow:0 2px 0 #0003}
+.gcard:active{transform:translateY(5px);box-shadow:0 3px 0 #0002}
+.gcard .em{font-size:3.6rem;line-height:1.1;text-shadow:none;animation:wiggle 3s ease-in-out infinite}
+.gcard:nth-child(2n) .em{animation-delay:-1.5s}
+.gcard b{font-size:1.3rem;line-height:1.1;font-weight:800;text-align:center}
+.gcard b small{display:block;font-size:.8rem;opacity:.9}
+.gcard .st{font-size:.95rem;margin-top:4px;text-shadow:none}
+.st i{opacity:.25;font-style:normal;filter:grayscale(1)}
+@keyframes popin{from{opacity:0;transform:scale(.3)}70%{transform:scale(1.08)}}
+@keyframes wiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.08)}}
+.foot{text-align:center;font-size:.8rem;opacity:.6;padding-bottom:8px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:#4a2c5e66;display:grid;place-items:center;padding:16px;animation:fade .25s}
+@keyframes fade{from{opacity:0}}
+.sheet{position:relative;background:#fff;border-radius:34px;padding:20px 18px;width:min(380px,100%);text-align:center;animation:popin .45s;box-shadow:0 10px 0 #0002}
+.sheet h2{margin:0 0 10px;font-size:1.7rem;line-height:1.1}
+.sheet h2 small{display:block;font-size:1rem}
+.sem{font-size:4rem;animation:bob 2s infinite}
+.lvl{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:10px 0;padding:12px;border-radius:24px;font-size:1.3rem;font-weight:800;background:var(--c);color:#fff;box-shadow:0 6px 0 #0002;animation:popin .45s backwards;animation-delay:var(--d)}
+.lvl span{line-height:1.1;text-align:left}.lvl small{display:block;font-size:.85rem;opacity:.9}
+.lvl:active{transform:translateY(4px);box-shadow:0 2px 0 #0002}
+.close{position:absolute;top:10px;right:14px;font-size:1.3rem;width:44px;height:44px;border-radius:50%;background:#f3eef7}
+.trophy{font-size:6rem;animation:yay 1s infinite}
+.row{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.big{flex:1;background:#ffd166;border-radius:22px;padding:10px 4px;font-size:2rem;line-height:1.1;box-shadow:0 6px 0 #0002}
+.big small{display:block;font-size:.8rem;opacity:.8}
+.big:active{transform:translateY(4px);box-shadow:none}
+.big.hl{background:#7bed9f}
+
+/* game */
+.bar{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.rbtn{width:52px;height:52px;border-radius:50%;background:#fff;font-size:1.6rem;box-shadow:0 4px 0 #0002;flex:none}
+.rbtn:active{transform:translateY(3px);box-shadow:none}
+.ttl{flex:1;font-weight:800;font-size:1.15rem;line-height:1.05}
+.ttl small{display:block;font-size:.8rem}
+.prog{display:flex;gap:2px;font-size:1.4rem;font-weight:800;color:#fff;text-shadow:0 2px 0 #0002}
+.prog i{font-style:normal;color:#0002;text-shadow:none;transition:.3s}
+.prog i.on{color:#ffc312;transform:scale(1.25);text-shadow:0 2px 0 #e08e0b}
+.prompt{display:flex;align-items:center;gap:8px;padding:0 16px}
+.prompt .mascot{font-size:3.4rem}
+.bubble{position:relative;flex:1;background:#fff;border-radius:24px;padding:10px 16px;font-size:1.45rem;font-weight:800;line-height:1.15;text-align:left;box-shadow:0 5px 0 #0001;animation:popin .4s}
+.bubble::before{content:'';position:absolute;left:-10px;top:50%;margin-top:-10px;border:10px solid transparent;border-right-color:#fff;border-left:0}
+.bubble small{display:block;font-size:1.05rem}
+.spk{float:right;font-size:1.3rem;animation:bob 1.6s infinite}
+.show{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:8px 16px 0;min-height:8px}
+.cnt{font-size:2.6rem;line-height:1;position:relative;animation:popin .4s backwards;padding:4px}
+.cnt[data-n]{animation:yay .5s}
+.cnt[data-n]::after{content:attr(data-n);position:absolute;right:-2px;top:-4px;background:#ff6b9d;color:#fff;border-radius:99px;font-size:.9rem;min-width:24px;height:24px;line-height:24px;text-align:center;font-weight:800}
+.choices{flex:1;display:grid;gap:14px;padding:12px 16px 20px;grid-template-columns:repeat(2,1fr);align-content:center;width:100%;max-width:560px;margin:0 auto;overflow-y:auto}
+.choices.c3{grid-template-columns:repeat(3,1fr)}
+.ch{aspect-ratio:1;background:#fff;border-radius:30px;box-shadow:0 7px 0 #0002;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;overflow:hidden;animation:popin .45s backwards;transition:opacity .3s}
+.c4 .ch{aspect-ratio:1.2}
+.ch:active{transform:translateY(4px);box-shadow:0 3px 0 #0002}
+.ch.ok{animation:yay .7s;box-shadow:0 0 0 6px var(--ok),0 7px 0 #0002}
+.ch.no{animation:shake .5s;opacity:.3;pointer-events:none}
+@keyframes shake{20%,60%{transform:translateX(-10px) rotate(-4deg)}40%,80%{transform:translateX(10px) rotate(4deg)}}
+.emo{font-size:clamp(3rem,17vw,5.2rem);line-height:1}
+.c3 .emo{font-size:clamp(2.6rem,13vw,4.4rem)}
+.num{font-size:clamp(3rem,18vw,5.6rem);font-weight:800;line-height:1;text-shadow:0 5px 0 #0002}
+.c3 .num{font-size:clamp(2.6rem,14vw,4.6rem)}
+.blob{width:72%;height:72%;border-radius:46% 54% 52% 48%/55% 45% 55% 45%;box-shadow:inset -8px -10px 0 #0002,0 0 0 3px #0001;animation:blob 4s ease-in-out infinite}
+@keyframes blob{50%{border-radius:55% 45% 40% 60%/45% 55% 45% 55%;transform:rotate(8deg)}}
+.ch svg{width:74%;height:74%;filter:drop-shadow(0 4px 0 #0002)}
+.grp{display:flex;flex-wrap:wrap;justify-content:center;font-size:clamp(1.5rem,7vw,2.2rem);padding:6px}
+
+/* memory */
+.mem{flex:1;display:grid;gap:12px;padding:14px 16px 20px;width:100%;max-width:520px;margin:0 auto;align-content:center}
+.m2{grid-template-columns:repeat(2,1fr);max-width:340px}.m4,.m6{grid-template-columns:repeat(4,1fr)}
+.card{aspect-ratio:3/4;perspective:700px;animation:popin .45s backwards}
+.card .in{display:block;position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.card.flip .in{transform:rotateY(180deg)}
+.card .f,.card .b{position:absolute;inset:0;border-radius:20px;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 6px 0 #0002}
+.card .f{background:repeating-linear-gradient(45deg,#ffd166 0 14px,#ffbf3f 14px 28px);font-size:2rem;color:#fff}
+.card .b{background:#fff;transform:rotateY(180deg);font-size:clamp(2rem,11vw,3.6rem)}
+.m2 .card .b{font-size:4.5rem}
+.card.got .b{box-shadow:0 0 0 5px var(--ok),0 6px 0 #0002;animation:yay2 .6s}
+@keyframes yay2{50%{transform:rotateY(180deg) scale(1.12)}}
+
+/* balloons */
+.sky{flex:1;position:relative;overflow:hidden}
+.balloon{position:absolute;bottom:-140px;width:84px;height:120px;animation:rise 7s linear forwards;touch-action:none}
+.balloon .bl{position:absolute;inset:0 0 18px;border-radius:50% 50% 48% 48%/55% 55% 45% 45%;background:radial-gradient(circle at 32% 28%,#fff9 0 10%,transparent 12%),var(--c);box-shadow:inset -8px -10px 0 #0002;animation:sway 2s ease-in-out infinite}
+.balloon .bl::after{content:'';position:absolute;left:50%;top:100%;width:2px;height:34px;background:#0004}
+.balloon.pop .bl{animation:popb .25s forwards}
+@keyframes rise{to{transform:translateY(calc(-100dvh - 180px))}}
+@keyframes sway{50%{transform:rotate(7deg) translateX(8px)}}
+@keyframes popb{to{transform:scale(1.7);opacity:0}}
+
+/* fx */
+.conf{position:fixed;z-index:99;pointer-events:none;font-size:24px;transform:translate(-50%,-50%);animation:conf .9s ease-out forwards}
+@keyframes conf{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.3) rotate(220deg);opacity:0}}
+.rain{position:fixed;top:-50px;z-index:60;pointer-events:none;font-size:30px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:80;background:#4a2c5e;color:#fff;padding:14px 18px;border-radius:20px;text-align:center;font-weight:800;animation:popin .4s}
+.toast small{display:block;opacity:.8}
+@media (prefers-reduced-motion:reduce){.bg span,.gcard .em,.mascot,.blob,.spk{animation:none}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <span class="sun">🌞</span><span class="c1">☁️</span><span class="c2">☁️</span><span class="c3">☁️</span>
+  <span class="dot" style="left:12%;top:78%;background:#ff7eb666"></span>
+  <span class="dot" style="left:82%;top:58%;background:#3d8bff44;animation-delay:-3s"></span>
+  <span class="dot" style="left:48%;top:88%;background:#ffd16688;animation-delay:-6s"></span>
+</div>
+<main id="main"></main>
+<noscript>Sila hidupkan JavaScript / Please enable JavaScript.</noscript>
+<script>
+const $ = s => document.querySelector(s);
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- settings ---------- */
+const S = { lang: 'both', sound: true, done: {} };
+try { Object.assign(S, JSON.parse(localStorage.getItem('manjaminda') || '{}')); } catch {}
+const save = () => { try { localStorage.setItem('manjaminda', JSON.stringify(S)); } catch {} };
+const T = (ms, en) => S.lang === 'ms' ? ms : S.lang === 'en' ? en : `${ms}<small>${en}</small>`;
+const LANGS = { both: 'BM+EN', ms: 'BM', en: 'EN' };
+
+/* ---------- voice ---------- */
+const tts = window.speechSynthesis;
+let voices = [];
+if (tts) { const lv = () => voices = tts.getVoices(); lv(); tts.onvoiceschanged = lv; }
+const voiceFor = l => { for (const p of l === 'ms' ? ['ms', 'id'] : ['en']) { const v = voices.find(v => v.lang.toLowerCase().startsWith(p)); if (v) return v; } };
+function say(ms, en) {
+  return new Promise(res => {
+    if (!S.sound || !tts) return res();
+    tts.cancel();
+    const parts = S.lang === 'ms' ? [[ms, 'ms']] : S.lang === 'en' ? [[en, 'en']] : [[ms, 'ms'], [en, 'en']];
+    let fin = false; const done = () => { if (!fin) { fin = true; res(); } };
+    setTimeout(done, 6000);
+    parts.forEach(([txt, l], i) => {
+      const u = new SpeechSynthesisUtterance(txt);
+      const v = voiceFor(l);
+      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = l === 'ms' ? 'ms-MY' : 'en-US';
+      u.rate = .88; u.pitch = 1.3;
+      if (i === parts.length - 1) u.onend = u.onerror = done;
+      tts.speak(u);
+    });
+  });
+}
+
+/* ---------- sound fx ---------- */
+let ac;
+function tone(f, t = 0, d = .18, type = 'triangle', v = .18, f2) {
+  if (!S.sound) return;
+  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); } catch { return; }
+  const o = ac.createOscillator(), g = ac.createGain(), s = ac.currentTime + t;
+  o.type = type; o.frequency.setValueAtTime(f, s);
+  if (f2) o.frequency.exponentialRampToValueAtTime(f2, s + d);
+  g.gain.setValueAtTime(v, s); g.gain.exponentialRampToValueAtTime(.001, s + d);
+  o.connect(g).connect(ac.destination); o.start(s); o.stop(s + d);
+}
+const fx = {
+  tap: () => tone(700, 0, .1, 'sine', .15, 900),
+  ok: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .08, .25)),
+  no: () => tone(330, 0, .35, 'sine', .15, 180),
+  pop: () => { tone(1200, 0, .08, 'square', .06, 300); tone(200, 0, .12, 'sine', .2, 60); },
+  win: () => [523, 587, 659, 784, 880, 1047, 1319].forEach((f, i) => tone(f, i * .1, .35)),
+};
+
+/* ---------- effects ---------- */
+function burst(x, y, n = 14) {
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('i'), a = Math.random() * 6.28, d = 60 + Math.random() * 90;
+    s.className = 'conf'; s.textContent = rand(['⭐', '✨', '💖', '🌟', '🎉', '💛']);
+    s.style.cssText = `left:${x}px;top:${y}px;--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px`;
+    document.body.append(s); setTimeout(() => s.remove(), 950);
+  }
+}
+function rain() {
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('i'), d = 2 + Math.random() * 2;
+    s.className = 'rain'; s.textContent = rand(['⭐', '🎉', '🎈', '💖', '🌟', '🍭', '🌈']);
+    s.style.cssText = `left:${Math.random() * 100}vw;animation-duration:${d}s;animation-delay:${Math.random()}s`;
+    document.body.append(s); setTimeout(() => s.remove(), (d + 1) * 1000);
+  }
+}
+function jump() { const m = $('#pm'); if (!m) return; m.classList.remove('yay'); void m.offsetWidth; m.classList.add('yay'); }
+function toast(html) { const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = html; document.body.append(t); setTimeout(() => t.remove(), 4500); }
+
+/* ---------- content ---------- */
+const COLORS = [['Merah', 'Red', '#ff4757'], ['Biru', 'Blue', '#3d8bff'], ['Kuning', 'Yellow', '#ffd32a'], ['Hijau', 'Green', '#2ed573'], ['Oren', 'Orange', '#ff9f1a'], ['Ungu', 'Purple', '#a55eea'], ['Merah Jambu', 'Pink', '#ff8fc7'], ['Coklat', 'Brown', '#8d5a3b'], ['Hitam', 'Black', '#2f3542'], ['Putih', 'White', '#ffffff']].map(([ms, en, c]) => ({ ms, en, c }));
+const ANIMALS = [['🐱', 'Kucing', 'Cat', 'Meow meow!'], ['🐔', 'Ayam', 'Chicken', 'Kukuruyuk!'], ['🐄', 'Lembu', 'Cow', 'Moooo!'], ['🦆', 'Itik', 'Duck', 'Kuek kuek!'], ['🐟', 'Ikan', 'Fish', 'Blub blub!'], ['🐘', 'Gajah', 'Elephant', 'Pawoooo!'], ['🦁', 'Singa', 'Lion', 'Roarrr!'], ['🐒', 'Monyet', 'Monkey', 'Uu uu aa aa!'], ['🐰', 'Arnab', 'Rabbit', 'Lompat lompat!'], ['🐸', 'Katak', 'Frog', 'Ribbit ribbit!'], ['🐐', 'Kambing', 'Goat', 'Mbeeek!'], ['🐯', 'Harimau', 'Tiger', 'Rawrrr!'], ['🐴', 'Kuda', 'Horse', 'Hiiihiii!'], ['🐦', 'Burung', 'Bird', 'Cip cip cip!'], ['🦒', 'Zirafah', 'Giraffe', ''], ['🐢', 'Penyu', 'Turtle', ''], ['🦋', 'Rama-rama', 'Butterfly', ''], ['🐻', 'Beruang', 'Bear', 'Grrr!']].map(([e, ms, en, s]) => ({ e, ms, en, s }));
+const FRUITS = [['🍎', 'Epal', 'Apple'], ['🍌', 'Pisang', 'Banana'], ['🍉', 'Tembikai', 'Watermelon'], ['🍇', 'Anggur', 'Grapes'], ['🍊', 'Oren', 'Orange'], ['🍓', 'Strawberi', 'Strawberry'], ['🍍', 'Nanas', 'Pineapple'], ['🥭', 'Mangga', 'Mango'], ['🥥', 'Kelapa', 'Coconut'], ['🍐', 'Pear', 'Pear'], ['🍒', 'Ceri', 'Cherry'], ['🍋', 'Lemon', 'Lemon'], ['🥝', 'Kiwi', 'Kiwi']].map(([e, ms, en]) => ({ e, ms, en }));
+const SHAPES = [['Bulat', 'Circle', '<circle cx="50" cy="50" r="44"/>'], ['Segi Empat', 'Square', '<rect x="8" y="8" width="84" height="84" rx="8"/>'], ['Segi Tiga', 'Triangle', '<polygon points="50,6 96,92 4,92"/>'], ['Bintang', 'Star', '<polygon points="50,4 62,38 97,38 69,59 79,94 50,73 21,94 31,59 3,38 38,38"/>'], ['Hati', 'Heart', '<path d="M50 90C18 66 4 50 4 30A23 23 0 0 1 50 20A23 23 0 0 1 96 30C96 50 82 66 50 90Z"/>'], ['Bujur', 'Oval', '<ellipse cx="50" cy="50" rx="46" ry="30"/>'], ['Segi Empat Tepat', 'Rectangle', '<rect x="4" y="24" width="92" height="52" rx="6"/>'], ['Wajik', 'Diamond', '<polygon points="50,4 94,50 50,96 6,50"/>']].map(([ms, en, svg]) => ({ ms, en, svg }));
+const NUMS = [['Satu', 'One'], ['Dua', 'Two'], ['Tiga', 'Three'], ['Empat', 'Four'], ['Lima', 'Five'], ['Enam', 'Six'], ['Tujuh', 'Seven'], ['Lapan', 'Eight'], ['Sembilan', 'Nine'], ['Sepuluh', 'Ten']];
+const HUES = ['#ff4757', '#3d8bff', '#2ed573', '#ff9f1a', '#a55eea', '#ff6b9d', '#00b8d4'];
+const PRAISE = [['Pandai!', 'Clever!'], ['Hebat!', 'Awesome!'], ['Bagus!', 'Good job!'], ['Syabas!', 'Well done!'], ['Betul!', 'Correct!'], ['Wah, pandainya!', 'Wow, so smart!']];
+const LVN = [['Mudah', 'Easy', '#2ed573'], ['Sederhana', 'Medium', '#ff9f1a'], ['Mencabar', 'Challenge', '#ff4757']];
+const THINGS = [...ANIMALS, ...FRUITS];
+
+// pick a target (not the same as last time) plus n-1 distractors
+function pick(pool, n, g) {
+  let t; do t = rand(pool); while (pool.length > 1 && t === g.last);
+  g.last = t;
+  return { t, opts: shuffle([t, ...shuffle(pool.filter(x => x !== t)).slice(0, n - 1)]) };
+}
+const N3 = l => [2, 3, 4][l - 1]; // choices per level
+const emo = e => `<span class="emo">${e}</span>`;
+
+/* ---------- games ---------- */
+const GAMES = [
+  { id: 'warna', e: '🎨', ms: 'Warna', en: 'Colours', bg: '#ff8fa3',
+    round(l) {
+      const { t, opts } = pick(COLORS.slice(0, [4, 7, 10][l - 1]), N3(l), this);
+      return { say: [`Tekan warna ${t.ms}`, `Tap the colour ${t.en}`], after: [t.ms, t.en],
+        choices: opts.map(o => ({ html: `<span class="blob" style="background:${o.c}"></span>`, ok: o === t })) };
+    } },
+  { id: 'haiwan', e: '🦁', ms: 'Haiwan', en: 'Animals', bg: '#ffb84d',
+    round(l) {
+      const { t, opts } = pick(ANIMALS.slice(0, [6, 12, 18][l - 1]), N3(l), this);
+      return { say: [`Mana ${t.ms}?`, `Where is the ${t.en}?`], after: [`${t.ms}! ${t.s}`, `${t.en}! ${t.s}`],
+        choices: opts.map(o => ({ html: emo(o.e), ok: o === t })) };
+    } },
+  { id: 'buah', e: '🍉', ms: 'Buah', en: 'Fruits', bg: '#5fd68a',
+    round(l) {
+      const { t, opts } = pick(FRUITS.slice(0, [5, 9, 13][l - 1]), N3(l), this);
+      return { say: [`Mana ${t.ms}?`, `Where is the ${t.en}?`], after: [t.ms, t.en],
+        choices: opts.map(o => ({ html: emo(o.e), ok: o === t })) };
+    } },
+  { id: 'bentuk', e: '⭐', ms: 'Bentuk', en: 'Shapes', bg: '#70a1ff',
+    round(l) {
+      const { t, opts } = pick(SHAPES.slice(0, [4, 6, 8][l - 1]), N3(l), this);
+      const cols = shuffle(HUES);
+      return { say: [`Mana bentuk ${t.ms}?`, `Where is the ${t.en}?`], after: [t.ms, t.en],
+        choices: opts.map((o, i) => ({ html: `<svg viewBox="0 0 100 100" fill="${cols[i]}" stroke="#fff" stroke-width="4" stroke-linejoin="round">${o.svg}</svg>`, ok: o === t })) };
+    } },
+  { id: 'kira', e: '🔢', ms: 'Kira', en: 'Count', bg: '#b28dff',
+    round(l) {
+      const max = [3, 5, 10][l - 1];
+      let n; do n = 1 + Math.floor(Math.random() * max); while (n === this.last); this.last = n;
+      const others = shuffle([...Array(max)].map((_, i) => i + 1).filter(x => x !== n)).slice(0, N3(l) - 1);
+      const it = rand(THINGS);
+      return { say: ['Jom kira! Ada berapa?', "Let's count! How many?"], after: NUMS[n - 1],
+        show: [...Array(n)].map((_, i) => `<button class="cnt" style="animation-delay:${i * .08}s">${it.e}</button>`).join(''),
+        mount(el) { // tap each item to count it out loud
+          let k = 0;
+          el.querySelectorAll('.cnt').forEach(b => b.onclick = () => { if (b.dataset.n) return; b.dataset.n = ++k; fx.tap(); say(...NUMS[k - 1]); });
+        },
+        choices: shuffle([n, ...others]).map(x => ({ html: `<span class="num" style="color:${HUES[x % HUES.length]}">${x}</span>`, ok: x === n })) };
+    } },
+  { id: 'huruf', e: '🔤', ms: 'Huruf', en: 'Letters', bg: '#ff9f68',
+    round(l) {
+      const { t, opts } = pick([...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].slice(0, [5, 13, 26][l - 1]), N3(l), this);
+      return { say: [`Tekan huruf ${t}`, `Tap the letter ${t}`], after: [t, t],
+        choices: opts.map(o => ({ html: `<span class="num" style="color:${HUES[o.charCodeAt(0) % HUES.length]}">${o}</span>`, ok: o === t })) };
+    } },
+  { id: 'saiz', e: '🐘', ms: 'Besar Kecil', en: 'Big & Small', bg: '#3fd0bd',
+    round(l) {
+      const it = rand(THINGS);
+      if (l < 3) {
+        const sizes = l === 1 ? [['b', 5], ['s', 1.9]] : [['b', 4.6], ['m', 3], ['s', 1.6]];
+        const big = Math.random() < .5;
+        return { say: big ? ['Mana yang besar?', 'Which one is big?'] : ['Mana yang kecil?', 'Which one is small?'],
+          after: big ? ['Besar!', 'Big!'] : ['Kecil!', 'Small!'],
+          choices: shuffle(sizes).map(([k, s]) => ({ html: `<span style="font-size:${s}rem;line-height:1">${it.e}</span>`, ok: k === (big ? 'b' : 's') })) };
+      }
+      let a = 1 + Math.floor(Math.random() * 6), b;
+      do b = 1 + Math.floor(Math.random() * 6); while (Math.abs(a - b) < 2);
+      const more = Math.random() < .5, want = more ? Math.max(a, b) : Math.min(a, b);
+      return { say: more ? ['Mana lebih banyak?', 'Which has more?'] : ['Mana lebih sedikit?', 'Which has fewer?'],
+        after: more ? ['Lebih banyak!', 'More!'] : ['Lebih sedikit!', 'Fewer!'],
+        choices: [a, b].map(x => ({ html: `<span class="grp">${[...Array(x)].map(() => `<span>${it.e}</span>`).join('')}</span>`, ok: x === want })) };
+    } },
+  { id: 'padan', e: '🃏', ms: 'Padan Kad', en: 'Memory', bg: '#f7b731', play: memory },
+  { id: 'belon', e: '🎈', ms: 'Pop Belon', en: 'Pop Balloons', bg: '#ff6fb1', play: balloons },
+];
+
+/* ---------- navigation ---------- */
+let cleanup = () => {}, SID = 0;
+function nav(html) {
+  cleanup(); cleanup = () => {}; SID++;
+  tts && tts.cancel();
+  document.querySelectorAll('.modal').forEach(m => m.remove());
+  $('#main').innerHTML = html;
+}
+addEventListener('popstate', home);
+
+function home() {
+  nav(`<div class="screen">
+    <header class="top">
+      <button class="mascot" id="pm" aria-label="Hai">🐻</button>
+      <h1>Manja<br><span>Minda</span></h1>
+      <div class="tools">
+        <button class="pill" id="lang" aria-label="Bahasa / Language">${LANGS[S.lang]}</button>
+        <button class="pill" id="snd" aria-label="Bunyi / Sound">${S.sound ? '🔊' : '🔇'}</button>
+      </div>
+    </header>
+    <button class="install" id="inst" hidden>📲 ${T('Pasang App', 'Install App')}</button>
+    <div class="games">${GAMES.map((g, i) => `<button class="gcard" data-i="${i}" style="--bg:${g.bg};animation-delay:${i * .06}s">
+      <span class="em">${g.e}</span><b>${T(g.ms, g.en)}</b>
+      <span class="st">${[1, 2, 3].map(l => S.done[g.id + l] ? '⭐' : '<i>⭐</i>').join('')}</span></button>`).join('')}
+      <div class="foot" style="grid-column:1/-1">${T('Untuk adik 2–4 tahun 💖', 'For little ones aged 2–4 💖')}</div>
+    </div></div>`);
+  $('#pm').onclick = () => { jump(); fx.tap(); say('Hai! Jom main dan belajar!', "Hi! Let's play and learn!"); };
+  $('#lang').onclick = () => { S.lang = { both: 'ms', ms: 'en', en: 'both' }[S.lang]; save(); home(); fx.tap(); };
+  $('#snd').onclick = () => { S.sound = !S.sound; save(); home(); fx.tap(); };
+  document.querySelectorAll('.gcard').forEach(b => b.onclick = () => levels(GAMES[b.dataset.i]));
+  showInstall();
+}
+
+function levels(g) {
+  fx.tap(); say(g.ms, g.en);
+  const m = document.createElement('div');
+  m.className = 'modal';
+  m.innerHTML = `<div class="sheet"><button class="close" aria-label="Tutup">✖</button>
+    <div class="sem">${g.e}</div><h2>${T(g.ms, g.en)}</h2>
+    ${[1, 2, 3].map(l => `<button class="lvl" data-l="${l}" style="--c:${LVN[l - 1][2]};--d:${l * .08}s">
+      <span>${'⭐'.repeat(l)}</span><span>${T(LVN[l - 1][0], LVN[l - 1][1])}</span>${S.done[g.id + l] ? '🏆' : ''}</button>`).join('')}</div>`;
+  m.onclick = e => {
+    const b = e.target.closest('.lvl');
+    if (b) { m.remove(); history.pushState({ g: g.id }, ''); start(g, +b.dataset.l); }
+    else if (e.target === m || e.target.closest('.close')) m.remove();
+  };
+  document.body.append(m);
+}
+
+function start(g, l) { (g.play || quiz)(g, l); }
+
+function shell(g, l, body) {
+  nav(`<div class="screen">
+    <div class="bar"><button class="rbtn" id="back" aria-label="Menu">🏠</button>
+      <div class="ttl">${g.e} ${T(g.ms, g.en)}</div><div class="prog" id="prog"></div></div>
+    <div class="prompt"><span class="mascot" id="pm">🐻</span><button class="bubble" id="bub"></button></div>
+    ${body}</div>`);
+  $('#back').onclick = () => history.back();
+}
+function prompt(ms, en) {
+  const b = $('#bub');
+  b.innerHTML = `<span class="spk">🔊</span>${T(ms, en)}`;
+  b.onclick = () => say(ms, en);
+  b.style.animation = 'none'; void b.offsetWidth; b.style.animation = '';
+  say(ms, en);
+}
+
+function win(g, l) {
+  S.done[g.id + l] = 1; save();
+  fx.win(); rain();
+  say('Hebat! Kamu berjaya!', 'Hooray! You did it!');
+  const m = document.createElement('div');
+  m.className = 'modal';
+  m.innerHTML = `<div class="sheet"><div class="trophy">🏆</div><h2>${T('Hebat! Kamu berjaya!', 'Hooray! You did it!')}</h2>
+    <div style="font-size:2.2rem">${'⭐'.repeat(l)}</div>
+    <div class="row"><button class="big" data-a="again">🔁<small>${T('Lagi', 'Again')}</small></button>
+    ${l < 3 ? `<button class="big hl" data-a="next">⏭️<small>${T('Seterusnya', 'Next')}</small></button>` : ''}
+    <button class="big" data-a="home">🏠<small>Menu</small></button></div></div>`;
+  m.onclick = e => {
+    const a = e.target.closest('[data-a]')?.dataset.a;
+    if (!a) return;
+    m.remove(); fx.tap();
+    if (a === 'home') history.back(); else start(g, a === 'next' ? l + 1 : l);
+  };
+  document.body.append(m);
+}
+
+/* ---------- quiz engine ---------- */
+function quiz(g, l) {
+  const N = 5; let q = 0;
+  shell(g, l, `<div class="show" id="show"></div><div class="choices" id="ch"></div>`);
+  const sid = SID;
+  const prog = () => $('#prog').innerHTML = [...Array(N)].map((_, i) => `<i class="${i < q ? 'on' : ''}">★</i>`).join('');
+  function round() {
+    prog();
+    const r = g.round(l);
+    prompt(...r.say);
+    $('#show').innerHTML = r.show || '';
+    r.mount?.($('#show'));
+    const ch = $('#ch');
+    ch.className = 'choices c' + r.choices.length;
+    ch.innerHTML = r.choices.map((c, i) => `<button class="ch" style="animation-delay:${i * .08}s">${c.html}</button>`).join('');
+    let busy = false;
+    [...ch.children].forEach((b, i) => b.onclick = async e => {
+      if (busy) return;
+      if (!r.choices[i].ok) { b.classList.add('no'); fx.no(); say('Cuba lagi!', 'Try again!'); return; }
+      busy = true; q++;
+      b.classList.add('ok'); fx.ok(); burst(e.clientX, e.clientY); jump(); prog();
+      const p = rand(PRAISE), a = r.after || ['', ''];
+      await Promise.all([say(`${p[0]} ${a[0]}`, `${p[1]} ${a[1]}`), wait(1300)]);
+      if (sid !== SID) return;
+      q >= N ? win(g, l) : round();
+    });
+  }
+  round();
+}
+
+/* ---------- memory ---------- */
+function memory(g, l) {
+  const P = [2, 4, 6][l - 1];
+  const items = shuffle(THINGS).slice(0, P), deck = shuffle([...items, ...items]);
+  shell(g, l, `<div class="mem m${P}" id="mem">${deck.map((it, i) => `<button class="card" style="animation-delay:${i * .05}s"><span class="in"><span class="f">⭐</span><span class="b">${it.e}</span></span></button>`).join('')}</div>`);
+  const sid = SID;
+  prompt('Cari gambar yang sama!', 'Find the matching pairs!');
+  let open = [], found = 0, lock = false;
+  const prog = () => $('#prog').textContent = `${found}/${P}`;
+  prog();
+  [...$('#mem').children].forEach((c, i) => c.onclick = e => {
+    if (lock || c.classList.contains('flip')) return;
+    c.classList.add('flip'); fx.tap(); say(deck[i].ms, deck[i].en);
+    open.push([c, deck[i]]);
+    if (open.length < 2) return;
+    lock = true;
+    const [[a, x], [b, y]] = open; open = [];
+    setTimeout(() => {
+      if (sid !== SID) return;
+      if (x === y) {
+        a.classList.add('got'); b.classList.add('got'); fx.ok(); burst(e.clientX, e.clientY); jump();
+        found++; prog(); lock = false;
+        if (found === P) setTimeout(() => sid === SID && win(g, l), 900);
+      } else { a.classList.remove('flip'); b.classList.remove('flip'); lock = false; }
+    }, x === y ? 500 : 1200);
+  });
+}
+
+/* ---------- balloons ---------- */
+function balloons(g, l) {
+  const goal = [5, 10, 15][l - 1];
+  let n = 0;
+  shell(g, l, `<div class="sky" id="sky"></div>`);
+  const sid = SID, sky = $('#sky');
+  prompt('Pecahkan belon!', 'Pop the balloons!');
+  const prog = () => $('#prog').textContent = `🎈${n}/${goal}`;
+  prog();
+  const spawn = () => {
+    const c = rand(COLORS.slice(0, 7)), b = document.createElement('button');
+    b.className = 'balloon';
+    b.innerHTML = '<span class="bl"></span>';
+    b.style.cssText = `--c:${c.c};left:${4 + Math.random() * 68}%;animation-duration:${[8, 6.5, 5][l - 1] + Math.random() * 2}s`;
+    b.onpointerdown = e => {
+      if (b.classList.contains('pop') || n >= goal) return;
+      b.classList.add('pop'); fx.pop(); burst(e.clientX, e.clientY, 10);
+      n++; prog(); say(c.ms, c.en);
+      setTimeout(() => b.remove(), 300);
+      if (n === goal) { clearInterval(t); setTimeout(() => sid === SID && win(g, l), 800); }
+    };
+    b.onanimationend = e => e.animationName === 'rise' && b.remove();
+    sky.append(b);
+  };
+  spawn();
+  const t = setInterval(spawn, [1200, 950, 750][l - 1]);
+  cleanup = () => clearInterval(t);
+}
+
+/* ---------- install (PWA) ---------- */
+let deferred;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; showInstall(); });
+addEventListener('appinstalled', () => { deferred = null; showInstall(); });
+function showInstall() {
+  const b = $('#inst');
+  if (!b) return;
+  b.hidden = !(deferred || (isIOS && !standalone));
+  b.onclick = async () => {
+    if (deferred) { deferred.prompt(); await deferred.userChoice; deferred = null; showInstall(); }
+    else toast(T('Tekan butang Share ⬆️ kemudian "Add to Home Screen"', 'Tap Share ⬆️ then "Add to Home Screen"'));
+  };
+}
+if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+history.replaceState(null, '');
+home();
+</script>
+</body>
+</html>
